@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DC Comics Reading Order — Interactive Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070d1c; --bg2:#0c1730; --card:#101c3a; --card2:#0d1833; --line:#1d2f5c;
+  --blue:#0476f2; --blue2:#3b9bff; --red:#e0243a; --gold:#ffc83d; --green:#2fd27a;
+  --text:#e8eefc; --muted:#8fa3cc;
+  --era:var(--blue);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;
+  background-image:radial-gradient(circle at 15% 0%,rgba(4,118,242,.25),transparent 45%),radial-gradient(circle at 90% 10%,rgba(224,36,58,.18),transparent 40%);
+  background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;z-index:0;
+  background-image:radial-gradient(#fff 1.2px,transparent 1.4px);background-size:14px 14px}
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 18px 80px}
+
+/* hero */
+.hero{padding:44px 0 26px;text-align:center}
+.eyebrow{font-family:Oswald;letter-spacing:.35em;font-size:.78rem;color:var(--red);text-transform:uppercase}
+h1{font-family:Bangers,Impact,sans-serif;font-weight:400;font-size:clamp(2.6rem,8vw,5rem);letter-spacing:.04em;line-height:1;margin:8px 0 6px;
+  background:linear-gradient(180deg,#fff 20%,#7db8ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(4px 4px 0 var(--red))}
+.sub{color:var(--muted);max-width:620px;margin:10px auto 0}
+.stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.stat{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 20px;min-width:120px;box-shadow:4px 4px 0 rgba(224,36,58,.5)}
+.stat b{display:block;font-family:Bangers;font-size:2rem;letter-spacing:.05em;color:var(--gold);font-weight:400}
+.stat span{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.bigbar{height:16px;background:var(--card2);border:2px solid var(--line);border-radius:99px;margin:22px auto 0;max-width:640px;overflow:hidden}
+.bigbar i{display:block;height:100%;width:0;background:repeating-linear-gradient(45deg,var(--blue),var(--blue) 10px,var(--blue2) 10px,var(--blue2) 20px);transition:width .5s}
+
+/* toolbar */
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(7,13,28,.9);backdrop-filter:blur(10px);border-bottom:2px solid var(--line);
+  margin:0 -18px;padding:10px 18px}
+.row1{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{flex:1;min-width:200px;position:relative}
+.search input{width:100%;background:var(--card);border:2px solid var(--line);color:var(--text);border-radius:10px;padding:10px 14px 10px 38px;font:inherit;outline:none}
+.search input:focus{border-color:var(--blue2)}
+.search::before{content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip,.btn{font-family:Oswald;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem;background:var(--card);border:2px solid var(--line);color:var(--muted);
+  padding:7px 12px;border-radius:99px;cursor:pointer;transition:.15s}
+.chip:hover,.btn:hover{color:#fff;border-color:var(--blue2)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.red:hover{border-color:var(--red);color:#fff}
+.erabar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:thin}
+.erabtn{flex:0 0 auto;font-family:Oswald;font-size:.72rem;letter-spacing:.05em;color:var(--muted);background:var(--card2);border:2px solid var(--line);border-radius:10px;padding:5px 10px;cursor:pointer;position:relative;overflow:hidden;white-space:nowrap}
+.erabtn:hover{color:#fff;border-color:var(--blue2)}
+.erabtn i{position:absolute;left:0;bottom:0;height:3px;background:var(--green);width:0;transition:width .4s}
+.erabtn.full{border-color:var(--green);color:var(--green)}
+
+/* guide redesign - hidden by default */
+details.main-guide{margin:22px 0;background:var(--card);border:2px solid var(--line);border-radius:14px;overflow:hidden}
+details.main-guide summary{cursor:pointer;font-family:Bangers;letter-spacing:.06em;font-size:1.6rem;padding:18px 20px;list-style:none;color:var(--gold);background:rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:center}
+details.main-guide summary::-webkit-details-marker{display:none}
+details.main-guide summary::after{content:"▼";font-size:1rem;color:var(--red);transition:.3s}
+details.main-guide[open] summary::after{transform:rotate(180deg)}
+.guide-content{padding:20px;border-top:2px solid var(--line)}
+
+.g-card{background:var(--card2);border:2px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:.2s}
+.g-card summary{cursor:pointer;padding:16px;font-family:Oswald;color:var(--blue2);font-size:1.05rem;text-transform:uppercase;letter-spacing:.05em;list-style:none;display:flex;align-items:center;gap:10px;margin:0;background:none}
+.g-card summary::-webkit-details-marker{display:none}
+.g-card summary::before{content:"+";font-family:Bangers;font-size:1.4rem;color:var(--red);line-height:1}
+.g-card[open] summary::before{content:"-"}
+.g-card[open] summary{background:rgba(4,118,242,.1);border-bottom:2px solid var(--line);color:#fff}
+.g-card .inner{padding:16px;font-size:.95rem;color:#c9d6f2;animation:fadeIn .3s}
+.g-card p{margin-bottom:10px}
+.g-card ul{margin:0 0 10px 20px}
+.g-card li{margin-bottom:6px}
+.g-card b{color:#fff}
+
+.g-callout{border-left:5px solid var(--red);background:rgba(224,36,58,.15);padding:12px 16px;border-radius:6px;margin:12px 0;font-size:.9rem}
+.g-callout.note{border-left-color:var(--blue2);background:rgba(59,155,255,.12)}
+.g-callout b{color:#ffd1d6}
+.g-callout.note b{color:var(--blue2)}
+
+.g-steps{display:grid;gap:10px;margin-top:12px}
+.g-step{background:rgba(4,118,242,.1);border:1px solid var(--blue2);border-radius:8px;padding:12px}
+.g-step b{display:inline-block;background:var(--blue);color:#fff;font-family:Bangers;padding:2px 8px;border-radius:4px;margin-bottom:6px;letter-spacing:.05em;font-weight:400;font-size:1.1rem}
+.g-step p{font-size:.9rem;margin:0}
+
+.btn-expand{background:var(--blue2);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-family:Oswald;cursor:pointer;margin-bottom:16px;letter-spacing:.05em}
+.btn-expand:hover{background:var(--blue)}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* era */
+.era{margin-top:34px;--era:var(--blue)}
+.era.sa{--era:var(--gold)}
+.eh{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,var(--era),#0a3a85);border-left:8px solid var(--red);
+  padding:12px 16px;border-radius:12px;cursor:pointer;box-shadow:5px 5px 0 rgba(0,0,0,.45);user-select:none}
+.era.sa .eh{background:linear-gradient(90deg,#8a6a00,#3a2d00);border-left-color:var(--gold)}
+.eh .em{font-size:1.6rem}
+.eh h2{font-family:Bangers;font-weight:400;letter-spacing:.06em;font-size:clamp(1.2rem,3.5vw,1.8rem);flex:1;line-height:1.1}
+.eh .cnt{font-family:Oswald;font-size:.8rem;background:rgba(0,0,0,.35);padding:3px 10px;border-radius:99px}
+.eh .mark{font-family:Oswald;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.15);border:0;color:#fff;padding:5px 10px;border-radius:99px;cursor:pointer}
+.eh .mark:hover{background:rgba(255,255,255,.3)}
+.eh .car{transition:.2s}
+.era.closed .car{transform:rotate(-90deg)}
+.era.closed .list{display:none}
+.eprog{height:5px;background:var(--card2);border-radius:5px;margin:8px 4px 0;overflow:hidden}
+.eprog i{display:block;height:100%;width:0;background:var(--green);transition:width .4s}
+.list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.div{font-family:Oswald;letter-spacing:.07em;text-transform:uppercase;font-size:.82rem;color:#3a2a00;background:var(--gold);padding:8px 14px;border-radius:10px;margin-top:6px}
+.card{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 14px;transition:.15s;cursor:pointer}
+.card:hover{border-color:var(--blue2);transform:translateX(3px)}
+.card.indent{margin-left:22px}
+.card.ev{background:linear-gradient(90deg,rgba(224,36,58,.2),var(--card) 55%);border-color:rgba(224,36,58,.55)}
+/*.card.new{border-color:var(--gold)}*/
+.card.done{opacity:.55}
+.card.done h3{text-decoration:line-through;text-decoration-color:var(--green)}
+.cb{flex:0 0 26px;height:26px;border:2px solid var(--blue2);border-radius:7px;display:grid;place-items:center;margin-top:2px;transition:.15s;background:var(--card2)}
+.card.done .cb{background:var(--green);border-color:var(--green)}
+.cb svg{width:16px;height:16px;stroke:#04210f;stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:.15s}
+.card.done .cb svg{opacity:1;transform:scale(1)}
+.info{flex:1;min-width:0}
+.info h3{font-family:Oswald;font-weight:600;letter-spacing:.03em;font-size:1.05rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.info p{color:var(--muted);font-size:.88rem;margin-top:3px}
+.info p b{color:#ffd1d6}
+.badge{font-family:Oswald;font-weight:500;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px}
+.b-tag{background:rgba(4,118,242,.2);border:1px solid var(--blue2);color:var(--blue2)}
+.b-new{background:var(--gold);color:#3a2a00}
+.b-ev{background:var(--red);color:#fff}
+.b-pg{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#c9d6f2}
+.empty{text-align:center;color:var(--muted);padding:50px 0;display:none}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#3a2a00;font-family:Bangers;letter-spacing:.06em;font-size:1.2rem;padding:10px 22px;border-radius:12px;border:3px solid #000;box-shadow:4px 4px 0 #000;transition:.35s;z-index:50}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:560px){.eh .mark{display:none}.card.indent{margin-left:10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">DC Comics · Orientation &amp; Chronology</div>
+    <h1>DC Reading Order</h1>
+    <p class="sub">Your complete journey through the DC Universe — era by era, reset by reset. Tick off what you've read; progress saves in your browser.</p>
+    <div class="stats">
+      <div class="stat"><b id="sDone">0</b><span>Read</span></div>
+      <div class="stat"><b id="sTotal">0</b><span>Total</span></div>
+      <div class="stat"><b id="sPct">0%</b><span>Complete</span></div>
+    </div>
+    <div class="bigbar"><i id="bigfill"></i></div>
+  </header>
+
+  <!-- NEW HIDDEN GUIDE -->
+  <details class="main-guide">
+    <summary>🚨 Welcome to the DC Universe: A Beginner's Guide (Click to Open)</summary>
+    <div class="guide-content">
+      <p style="margin-bottom:16px; font-style:italic; color:var(--muted);">If you have never read a comic book before, this list might look like a terrifying wall of text. This guide explains exactly how DC Comics work and how to navigate this list without getting confused.</p>
+      
+      <button class="btn-expand" id="expandAllGuide">Expand All Info</button>
+
+      <details class="g-card">
+        <summary>📚 1. What Exactly is a Comic Book?</summary>
+        <div class="inner">
+          <p>Before we talk about DC, let's understand the medium.</p>
+          <ul>
+            <li><b>The Comic:</b> A comic book is a short magazine that tells a story using pictures and speech bubbles.</li>
+            <li><b>The Issue:</b> Comics are published in small chunks called "issues" (usually about 20–30 pages long). Think of an issue like a single episode of a TV show.</li>
+            <li><b>The Trade Paperback (TPB) / Graphic Novel:</b> Because collecting hundreds of single issues is expensive and hard to store, publishers later collect 5 to 10 issues into a single, thick book. This is called a Trade Paperback. When this list says <i>"Batman: Year One,"</i> it is referring to a collected book containing multiple issues.</li>
+            <li><b>The Run:</b> When a specific writer and artist work on a character for a long time (for example, "The Geoff Johns Run on Green Lantern"), it is called a "run."</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="g-card">
+        <summary>🌍 2. The DC Universe: A Shared World</summary>
+        <div class="inner">
+          <p>DC Comics started in the 1930s. They created iconic characters like Superman, Batman, and Wonder Woman. In the beginning, these characters lived in separate worlds. But eventually, DC decided it would be cool if they all lived in the same universe. This way, Superman could team up with Batman, and they could form a team called the Justice League.</p>
+          <p>Over 50 years, DC published thousands of comics. They experimented with time travel, alternate realities, and different versions of their characters. As a result, by the 1980s, their history was a <b>highly unorganized mess</b>.</p>
+          <p>If you read a Batman comic from 1970, and then a Batman comic from 1985, the character's history might completely contradict itself. New readers were terrified to pick up a comic because they had no idea what was going on. There was no consistent <b>Continuity</b> (the idea that a character's past events actually matter and flow in a straight line).</p>
+        </div>
+      </details>
+
+      <details class="g-card">
+        <summary>💥 3. The Solution: "Crisis on Infinite Earths"</summary>
+        <div class="inner">
+          <p>To fix this messy timeline, DC did something drastic. In 1985, they published a massive, multi-issue crossover event called <b><i>Crisis on Infinite Earths</i></b>.</p>
+          <p>The entire purpose of this comic was to destroy the old, messy universes and reboot the DC timeline. It was like hitting a factory reset button on a computer. When the story ended, DC started fresh. They created a single, clean timeline with one consistent history for every character.</p>
+          <p>This is the dividing line for this entire reading list:</p>
+          <ul>
+            <li><b>PRE-CRISIS (Era 2):</b> Any comic published before 1985. These are the "old style" comics with classic art, heavy dialogue, and the old messy history.</li>
+            <li><b>POST-CRISIS (Era 3+):</b> Any comic published after 1985. These are the "modern" comics with cinematic art, natural dialogue, and the new, clean timeline.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="g-card">
+        <summary>🗺 4. How to Read Eras 1 &amp; 2 (Crucial!)</summary>
+        <div class="inner">
+          <p>Because you are a new reader, your first instinct might be to read <i>Crisis on Infinite Earths</i> first, since it's such a big deal. <b>Do not do that. You will be completely lost.</b></p>
+          <p>Here is why the opening two eras are built this way, and how you should read them:</p>
+          
+          <div class="g-steps">
+            <div class="g-step"><b>Step A</b><p><b>Era 1 — Modern Origins:</b> Start at the very top of Era 1. You will read books like <i>Batman: Year One</i> and <i>Superman: Secret Origin</i>. These are modern retellings of how the heroes started out. Read these first to get a fresh start and learn the basics of the characters.</p></div>
+            <div class="g-step"><b>Step B</b><p><b>Era 2 — Classic Pre-Crisis:</b> Once you understand who the characters are, it's time to go back in time. Read Era 2—these are the actual old comics from the 70s and 80s. Because you already know the characters, you will enjoy these classic stories much more.</p></div>
+            <div class="g-step"><b>Step C</b><p><b>The End:</b> At the bottom of Era 2, read <i>Crisis on Infinite Earths</i>. Now that you know the characters, you will actually care when the universe gets destroyed.</p></div>
+            <div class="g-step"><b>Step D</b><p><b>The Reboot:</b> Once <i>Crisis</i> is over, DC reboots. This new world technically starts with the Post-Crisis origins in Era 1 again—but since you've already read them in Step A, you just move straight on to Era 3.</p></div>
+          </div>
+
+          <div class="g-callout">
+            <b>A warning about Crisis:</b> In this massive event comic, you will meet many new characters you haven't read about yet. Don't worry about it! You are just going to have to assume that many different superheroes exist in this world. You will eventually read their solo comics later. You can still fully enjoy the story of Crisis without knowing every background character.
+          </div>
+          <div class="g-callout note">
+            <b>Note:</b> The characters in the Pre-Crisis era (Era 2) might look or act slightly differently than the modern origin versions you read in Era 1. They share a similar history, but the old versions are a bit more classic and campy. You will easily be able to connect the dots.
+          </div>
+        </div>
+      </details>
+
+      <details class="g-card">
+        <summary>🌌 5. Beyond Era 2: What Happens Next?</summary>
+        <div class="inner">
+          <p>After <i>Crisis</i> and Era 3, the DC Universe flows forward with a consistent continuity. You will follow the characters as they age, get married, have kids, and face massive cosmic events.</p>
+          <p>But here is the secret: <b>DC reboots their universe every few decades.</b> You will see other big events later in the list, like <i>Flashpoint</i> (Era 8) and <i>DC Rebirth</i> (Era 9). These are essentially "soft reboots" where the publisher hits the refresh button again. But don't worry—this reading order is designed to guide you smoothly through every single reset so you never feel lost.</p>
+        </div>
+      </details>
+
+      <details class="g-card">
+        <summary>🧠 6. Quick Glossary of Terms</summary>
+        <div class="inner">
+          <ul>
+            <li><b>Run:</b> A continuous series of comics by a specific writer/artist.</li>
+            <li><b>Vol. (Volume):</b> Can mean two things: A collection of issues (Vol. 1, Vol. 2) OR a rebooted series (<i>The Flash Vol. 1</i> vs <i>The Flash Vol. 2</i>).</li>
+            <li><b>Crossover / Event:</b> A massive story that spans across multiple different characters' comics (like <i>Infinite Crisis</i>).</li>
+            <li><b>Elseworlds / Out-of-Continuity:</b> A story that is not part of the main timeline. It's like a "What If?" story (e.g., <i>Superman: Red Son</i>).</li>
+            <li><b>Vertigo:</b> A mature, adult-oriented imprint of DC (like <i>Preacher</i> or <i>Sandman</i>). They are much darker and more violent.</li>
+            <li><b>Reboot:</b> When a publisher resets the timeline and starts a character's history over.</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </details>
+
+<p class="legend" style="text-align:center; color:var(--muted); font-size:.8rem; margin:-8px 0 8px;">🟥 Red cards = key events · 📖 Page counts are for the edition noted</p>
+
+  <div class="toolbar">
+    <div class="row1">
+      <div class="search"><input id="q" type="search" placeholder="Search titles & notes…  ( / )" autocomplete="off"></div>
+      <div class="chips" id="filters">
+        <button class="chip on" data-f="all">All</button>
+        <button class="chip" data-f="todo">To read</button>
+        <button class="chip" data-f="done">Read</button>
+        <button class="chip" data-f="ev">Key events</button>
+      </div>
+      <button class="btn" id="toggleAll">Collapse all</button>
+      <button class="btn red" id="reset">Reset</button>
+    </div>
+    <div class="erabar" id="erabar"></div>
+  </div>
+
+  <main id="main"></main>
+  <div class="empty" id="empty">No comics match. Try another search or filter. 🦇</div>
+  <footer>Built for the DC reading order · Progress is stored locally in your browser.</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="./dataV2.js"></script>
+<script>
+const SEED = [];
+const KEY = 'dc-reading-order-v1', CK = 'dc-reading-order-closed';
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+let done, closed, filter = 'all', query = '';
+try {
+  const s = localStorage.getItem(KEY);
+  done = new Set(s ? JSON.parse(s) : SEED.map(t => 'e1:' + slug(t)));
+  closed = new Set(JSON.parse(localStorage.getItem(CK) || '[]'));
+} catch (e) {
+  done = new Set(SEED.map(t => 'e1:' + slug(t)));
+  closed = new Set();
+}
+const save = () => {
+  try {
+    localStorage.setItem(KEY, JSON.stringify([...done]));
+    localStorage.setItem(CK, JSON.stringify([...closed]));
+  } catch (e) {}
+};
+
+// assign ids
+DATA.forEach((e, ei) => {
+  e.id = 'e' + (ei + 1);
+  e.items.forEach(r => { if (r.t) r.id = e.id + ':' + slug(r.t); });
+});
+const all = DATA.flatMap(e => e.items.filter(r => r.t));
+const el = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>';
+
+function build() {
+  el('erabar').innerHTML = DATA.map(e => `<button class="erabtn" data-e="${e.id}">${e.emoji} ${e.kind === 'sa' ? 'Standalone' : 'Era ' + e.title.match(/ERA (\d+)/)[1]}<i></i></button>`).join('');
+  el('main').innerHTML = DATA.map(e => `
+  <section class="era ${e.kind === 'sa' ? 'sa' : ''}" id="${e.id}">
+    <div class="eh" data-toggle="${e.id}">
+      <span class="em">${e.emoji}</span><h2>${esc(e.title)}</h2>
+      <span class="cnt"></span><button class="mark" data-mark="${e.id}">Mark all</button><span class="car">▾</span>
+    </div>
+    <div class="eprog"><i></i></div>
+    <div class="list">${e.items.map(r => r.divider ? `<div class="div" data-div>${esc(r.divider)}</div>` : card(e, r)).join('')}</div>
+  </section>`).join('');
+  [...document.querySelectorAll('.era')].forEach(s => { if (closed.has(s.id)) s.classList.add('closed'); });
+}
+
+function card(e, r) {
+  return `<div class="card ${r.ev ? 'ev' : ''} ${r.new ? 'new' : ''} ${r.indentable ? 'indent' : ''}" data-id="${r.id}" data-text="${esc((r.t + ' ' + r.lead + ' ' + r.n + ' ' + (r.tag || '')).toLowerCase())}">
+    <div class="cb">${CHECK}</div>
+    <div class="info"><h3>${esc(r.t)}${r.tag ? `<span class="badge b-tag">${esc(r.tag)}</span>` : ''}${r.ev ? '<span class="badge b-ev">Key event</span>' : ''}${r.p ? `<span class="badge b-pg">📖 ${r.p.toLocaleString()} pages${r.pn ? ' · ' + esc(r.pn) : ''}</span>` : ''}</h3>
+    <p>${r.lead ? `<b>${esc(r.lead)}</b> — ` : ''}${esc(r.n)}</p></div></div>`;
+}
+
+function refresh() {
+  const tot = all.length, d = all.filter(r => done.has(r.id)).length;
+  el('sDone').textContent = d;
+  el('sTotal').textContent = tot;
+  el('sPct').textContent = Math.round(d / tot * 100) + '%';
+  el('bigfill').style.width = (d / tot * 100) + '%';
+  let visible = 0;
+  DATA.forEach(e => {
+    const sec = el(e.id), rows = e.items.filter(r => r.t), ed = rows.filter(r => done.has(r.id)).length;
+    sec.querySelector('.cnt').textContent = ed + ' / ' + rows.length;
+    sec.querySelector('.eprog i').style.width = (ed / rows.length * 100) + '%';
+    const b = document.querySelector(`.erabtn[data-e="${e.id}"]`);
+    b.querySelector('i').style.width = (ed / rows.length * 100) + '%';
+    b.classList.toggle('full', ed === rows.length);
+    let secVis = 0, lastDiv = null, divVis = 0;
+    [...sec.querySelectorAll('.list > *')].forEach(n => {
+      if (n.hasAttribute('data-div')) { if (lastDiv) lastDiv.style.display = divVis ? '' : 'none'; lastDiv = n; divVis = 0; return; }
+      const r = all.find(x => x.id === n.dataset.id), isDone = done.has(r.id);
+      n.classList.toggle('done', isDone);
+      let show = true;
+      if (filter === 'todo') show = !isDone;
+      else if (filter === 'done') show = isDone;
+      else if (filter === 'ev') show = !!r.ev;
+      if (show && query) show = n.dataset.text.includes(query);
+      n.style.display = show ? '' : 'none';
+      if (show) { secVis++; divVis++; }
+    });
+    if (lastDiv) lastDiv.style.display = divVis ? '' : 'none';
+    sec.style.display = secVis ? '' : 'none';
+    visible += secVis;
+    sec.querySelector('[data-mark]').textContent = ed === rows.length ? 'Unmark all' : 'Mark all';
+    if (query || filter !== 'all') sec.classList.remove('closed');
+    else sec.classList.toggle('closed', closed.has(e.id));
+  });
+  el('empty').style.display = visible ? 'none' : 'block';
+  save();
+}
+
+function toast(m) {
+  const t = el('toast');
+  t.textContent = m;
+  t.classList.add('show');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function checkEraComplete(id) {
+  const e = DATA.find(x => x.id === id), rows = e.items.filter(r => r.t);
+  if (rows.every(r => done.has(r.id))) toast('💥 ' + e.title.split(':')[0] + ' COMPLETE!');
+}
+
+el('main').addEventListener('click', ev => {
+  const mk = ev.target.closest('[data-mark]');
+  if (mk) {
+    ev.stopPropagation();
+    const e = DATA.find(x => x.id === mk.dataset.mark), rows = e.items.filter(r => r.t);
+    const allDone = rows.every(r => done.has(r.id));
+    rows.forEach(r => allDone ? done.delete(r.id) : done.add(r.id));
+    refresh();
+    if (!allDone) checkEraComplete(e.id);
+    return;
+  }
+  const th = ev.target.closest('[data-toggle]');
+  if (th) {
+    const id = th.dataset.toggle;
+    closed.has(id) ? closed.delete(id) : closed.add(id);
+    refresh();
+    return;
+  }
+  const c = ev.target.closest('.card');
+  if (c) {
+    const id = c.dataset.id;
+    done.has(id) ? done.delete(id) : done.add(id);
+    refresh();
+    if (done.has(id)) checkEraComplete(id.split(':')[0]);
+  }
+});
+
+el('erabar').addEventListener('click', ev => {
+  const b = ev.target.closest('.erabtn');
+  if (!b) return;
+  closed.delete(b.dataset.e);
+  refresh();
+  el(b.dataset.e).scrollIntoView();
+});
+
+el('filters').addEventListener('click', ev => {
+  const b = ev.target.closest('.chip');
+  if (!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
+  refresh();
+});
+
+el('q').addEventListener('input', e => {
+  query = e.target.value.trim().toLowerCase();
+  refresh();
+});
+
+el('toggleAll').addEventListener('click', () => {
+  const anyOpen = DATA.some(e => !closed.has(e.id));
+  DATA.forEach(e => anyOpen ? closed.add(e.id) : closed.delete(e.id));
+  el('toggleAll').textContent = anyOpen ? 'Expand all' : 'Collapse all';
+  refresh();
+});
+
+el('reset').addEventListener('click', () => {
+  if (confirm('Reset all reading progress?')) {
+    done = new Set();
+    refresh();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== el('q')) {
+    e.preventDefault();
+    el('q').focus();
+  }
+});
+
+// Guide Expand All Button
+el('expandAllGuide').addEventListener('click', () => {
+  const cards = document.querySelectorAll('.g-card');
+  const allOpen = Array.from(cards).every(c => c.hasAttribute('open'));
+  cards.forEach(c => allOpen ? c.removeAttribute('open') : c.setAttribute('open', ''));
+  el('expandAllGuide').textContent = allOpen ? 'Expand All Info' : 'Collapse All Info';
+});
+
+build();
+refresh();
+</script>
+</body>
+</html>
