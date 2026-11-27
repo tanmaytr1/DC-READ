@@ -268,11 +268,13 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
 const SEED = [];
 const KEY = 'dc-reading-order-v1', CK = 'dc-reading-order-closed';
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const allEraIds = DATA.map((_, ei) => 'e' + (ei + 1));
 let done, closed, filter = 'all', query = '';
 try {
   const s = localStorage.getItem(KEY);
+  const c = localStorage.getItem(CK);
   done = new Set(s ? JSON.parse(s) : SEED.map(t => 'e1:' + slug(t)));
-  closed = new Set(JSON.parse(localStorage.getItem(CK) || '[]'));
+  closed = new Set(c !== null ? JSON.parse(c) : allEraIds);
 } catch (e) {
   done = new Set(SEED.map(t => 'e1:' + slug(t)));
   closed = new Set();
