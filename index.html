@@ -9,7 +9,7 @@
 <style>
 :root{
   --bg:#070d1c; --bg2:#0c1730; --card:#101c3a; --card2:#0d1833; --line:#1d2f5c;
-  --blue:#0476f2; --blue2:#3b9bff; --red:#e0243a; --gold:#ffc83d; --green:#2fd27a;
+  --blue:#0476f2; --blue2:#3b9bff; --red:#e0243a; --gold:#ffc83d; --green:#2fd27a; --purple:#a855f7;
   --text:#e8eefc; --muted:#8fa3cc;
   --era:var(--blue);
 }
@@ -113,7 +113,6 @@ details.main-guide[open] summary::after{transform:rotate(180deg)}
 .card:hover{border-color:var(--blue2);transform:translateX(3px)}
 .card.indent{margin-left:22px}
 .card.ev{background:linear-gradient(90deg,rgba(224,36,58,.2),var(--card) 55%);border-color:rgba(224,36,58,.55)}
-/*.card.new{border-color:var(--gold)}*/
 .card.done{opacity:.55}
 .card.done h3{text-decoration:line-through;text-decoration-color:var(--green)}
 .cb{flex:0 0 26px;height:26px;border:2px solid var(--blue2);border-radius:7px;display:grid;place-items:center;margin-top:2px;transition:.15s;background:var(--card2)}
@@ -126,9 +125,11 @@ details.main-guide[open] summary::after{transform:rotate(180deg)}
 .info p b{color:#ffd1d6}
 .badge{font-family:Oswald;font-weight:500;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px}
 .b-tag{background:rgba(4,118,242,.2);border:1px solid var(--blue2);color:var(--blue2)}
-.b-new{background:var(--gold);color:#3a2a00}
 .b-ev{background:var(--red);color:#fff}
 .b-pg{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#c9d6f2}
+.b-tier-essential{background:rgba(255,200,61,.18);border:1px solid var(--gold);color:var(--gold)}
+.b-tier-recommended{background:rgba(47,210,122,.15);border:1px solid var(--green);color:var(--green)}
+.b-tier-deep-cut{background:rgba(168,85,247,.16);border:1px solid var(--purple);color:#d8b4fe}
 .empty{text-align:center;color:var(--muted);padding:50px 0;display:none}
 footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#3a2a00;font-family:Bangers;letter-spacing:.06em;font-size:1.2rem;padding:10px 22px;border-radius:12px;border:3px solid #000;box-shadow:4px 4px 0 #000;transition:.35s;z-index:50}
@@ -150,12 +151,11 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
     <div class="bigbar"><i id="bigfill"></i></div>
   </header>
 
-  <!-- NEW HIDDEN GUIDE -->
   <details class="main-guide">
     <summary>🚨 Welcome to the DC Universe: A Beginner's Guide (Click to Open)</summary>
     <div class="guide-content">
       <p style="margin-bottom:16px; font-style:italic; color:var(--muted);">If you have never read a comic book before, this list might look like a terrifying wall of text. This guide explains exactly how DC Comics work and how to navigate this list without getting confused.</p>
-      
+
       <button class="btn-expand" id="expandAllGuide">Expand All Info</button>
 
       <details class="g-card">
@@ -198,7 +198,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
         <div class="inner">
           <p>Because you are a new reader, your first instinct might be to read <i>Crisis on Infinite Earths</i> first, since it's such a big deal. <b>Do not do that. You will be completely lost.</b></p>
           <p>Here is why the opening two eras are built this way, and how you should read them:</p>
-          
+
           <div class="g-steps">
             <div class="g-step"><b>Step A</b><p><b>Era 1 — Modern Origins:</b> Start at the very top of Era 1. You will read books like <i>Batman: Year One</i> and <i>Superman: Secret Origin</i>. These are modern retellings of how the heroes started out. Read these first to get a fresh start and learn the basics of the characters.</p></div>
             <div class="g-step"><b>Step B</b><p><b>Era 2 — Classic Pre-Crisis:</b> Once you understand who the characters are, it's time to go back in time. Read Era 2—these are the actual old comics from the 70s and 80s. Because you already know the characters, you will enjoy these classic stories much more.</p></div>
@@ -236,11 +236,10 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
           </ul>
         </div>
       </details>
-
     </div>
   </details>
 
-<p class="legend" style="text-align:center; color:var(--muted); font-size:.8rem; margin:-8px 0 8px;">🟥 Red cards = key events · 📖 Page counts are for the edition noted</p>
+  <p class="legend" style="text-align:center; color:var(--muted); font-size:.8rem; margin:-8px 0 8px;">🟥 Red cards = key events · ⭐ Essential · 🟢 Recommended · 🟣 Deep Cut · 📖 Page counts are for the edition noted</p>
 
   <div class="toolbar">
     <div class="row1">
@@ -250,8 +249,11 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:50px}
         <button class="chip" data-f="todo">To read</button>
         <button class="chip" data-f="done">Read</button>
         <button class="chip" data-f="ev">Key events</button>
+        <button class="chip" data-f="essential">Essential</button>
+        <button class="chip" data-f="recommended">Recommended</button>
+        <button class="chip" data-f="deep-cut">Deep Cut</button>
       </div>
-      <button class="btn" id="toggleAll">Collapse all</button>
+      <button class="btn" id="toggleAll">Expand all</button>
       <button class="btn red" id="reset">Reset</button>
     </div>
     <div class="erabar" id="erabar"></div>
@@ -269,6 +271,13 @@ const SEED = [];
 const KEY = 'dc-reading-order-v1', CK = 'dc-reading-order-closed';
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const allEraIds = DATA.map((_, ei) => 'e' + (ei + 1));
+
+const TIER_LABELS = {
+  "essential": "Essential",
+  "recommended": "Recommended",
+  "deep-cut": "Deep Cut"
+};
+
 let done, closed, filter = 'all', query = '';
 try {
   const s = localStorage.getItem(KEY);
@@ -277,7 +286,7 @@ try {
   closed = new Set(c !== null ? JSON.parse(c) : allEraIds);
 } catch (e) {
   done = new Set(SEED.map(t => 'e1:' + slug(t)));
-  closed = new Set();
+  closed = new Set(allEraIds);
 }
 const save = () => {
   try {
@@ -293,7 +302,7 @@ DATA.forEach((e, ei) => {
 });
 const all = DATA.flatMap(e => e.items.filter(r => r.t));
 const el = id => document.getElementById(id);
-const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>';
 
 function syncToggleLabel() {
@@ -316,9 +325,11 @@ function build() {
 }
 
 function card(e, r) {
-  return `<div class="card ${r.ev ? 'ev' : ''} ${r.new ? 'new' : ''} ${r.indentable ? 'indent' : ''}" data-id="${r.id}" data-text="${esc((r.t + ' ' + r.lead + ' ' + r.n + ' ' + (r.tag || '')).toLowerCase())}">
+  const tier = r.tier || 'recommended';
+  const tierLabel = TIER_LABELS[tier] || tier;
+  return `<div class="card ${r.ev ? 'ev' : ''} ${r.new ? 'new' : ''} ${r.indentable ? 'indent' : ''}" data-id="${r.id}" data-text="${esc((r.t + ' ' + r.lead + ' ' + r.n + ' ' + tierLabel + ' ' + (r.tag || '')).toLowerCase())}">
     <div class="cb">${CHECK}</div>
-    <div class="info"><h3>${esc(r.t)}${r.tag ? `<span class="badge b-tag">${esc(r.tag)}</span>` : ''}${r.ev ? '<span class="badge b-ev">Key event</span>' : ''}${r.p ? `<span class="badge b-pg">📖 ${r.p.toLocaleString()} pages${r.pn ? ' · ' + esc(r.pn) : ''}</span>` : ''}</h3>
+    <div class="info"><h3>${esc(r.t)}<span class="badge b-tier-${esc(tier)}">${esc(tierLabel)}</span>${r.tag ? `<span class="badge b-tag">${esc(r.tag)}</span>` : ''}${r.ev ? '<span class="badge b-ev">Key event</span>' : ''}${r.p ? `<span class="badge b-pg">📖 ${r.p.toLocaleString()} pages${r.pn ? ' · ' + esc(r.pn) : ''}</span>` : ''}</h3>
     <p>${r.lead ? `<b>${esc(r.lead)}</b> — ` : ''}${esc(r.n)}</p></div></div>`;
 }
 
@@ -345,6 +356,7 @@ function refresh() {
       if (filter === 'todo') show = !isDone;
       else if (filter === 'done') show = isDone;
       else if (filter === 'ev') show = !!r.ev;
+      else if (filter === 'essential' || filter === 'recommended' || filter === 'deep-cut') show = (r.tier || 'recommended') === filter;
       if (show && query) show = n.dataset.text.includes(query);
       n.style.display = show ? '' : 'none';
       if (show) { secVis++; divVis++; }
@@ -356,6 +368,7 @@ function refresh() {
     if (query || filter !== 'all') sec.classList.remove('closed');
     else sec.classList.toggle('closed', closed.has(e.id));
   });
+  syncToggleLabel();
   el('empty').style.display = visible ? 'none' : 'block';
   save();
 }
@@ -424,7 +437,6 @@ el('q').addEventListener('input', e => {
 el('toggleAll').addEventListener('click', () => {
   const anyOpen = DATA.some(e => !closed.has(e.id));
   DATA.forEach(e => anyOpen ? closed.add(e.id) : closed.delete(e.id));
-  el('toggleAll').textContent = anyOpen ? 'Expand all' : 'Collapse all';
   refresh();
 });
 
