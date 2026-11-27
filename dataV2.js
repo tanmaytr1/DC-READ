@@ -13,7 +13,6 @@ const DATA = [
       {"t": "Superman: Birthright", "lead": "", "n": "Expanded origin — Before putting on the cape, a globe-trotting Clark Kent uncovers his Kryptonian heritage and faces a dangerously personal rivalry with Lex Luthor.", "ev": false, "tier": "recommended", "p": 304},
       {"t": "The Man of Steel #3 (One night in Gotham city)", "lead": "", "n": "Classic single-issue bridge — Superman flies to Gotham to bring in a mysterious vigilante, forcing the Dark Knight and Man of Steel into their tense very first alliance.", "ev": false, "tier": "recommended", "p": 24},
       {"t": "Wonder Woman: Year One", "lead": "", "n": "Mythic, heartfelt origin charting Princess Diana's departure from Paradise Island to become Earth's champion of truth and compassion.", "ev": false, "tier": "essential", "p": 168},
-      {"t": "Wonder Woman: Historia", "lead": "", "n": "Jaw-droppingly illustrated mythic tragedy revealing the secret history of the Amazons before Diana was born.", "ev": false, "tier": "deep-cut"},
       {"t": "The Flash: Year One", "lead": "", "n": "Kinetic, lightning-charged origin as forensic scientist Barry Allen masters the Speed Force to outrun disaster.", "ev": false, "tier": "recommended", "p": 152},
        {"t": "Batman/Superman: World's Finest (Issues #1–6)", "lead": "", "n": "Retroactive early-days team-up — High-energy, classic adventure showcasing Bruce and Clark's iconic banter and trust alongside Robin and Supergirl before the Trinity unites.", "ev": false, "tier": "recommended", "p": 168},
       {"t": "Green Lantern: Secret Origin", "lead": "", "n": "High-flying sci-fi blockbuster showing how fearless test pilot Hal Jordan inherits a cosmic ring and uncovers an interstellar conspiracy.", "ev": false, "tier": "essential", "p": 176},
@@ -207,6 +206,7 @@ const DATA = [
       {"t": "JLA: A League of One", "lead": "", "n": "Lushly painted mythic thriller where a deadly prophecy forces Wonder Woman to defeat the entire Justice League alone to save their lives.", "ev": false, "tier": "recommended", "tag": "After Era 3 or 4", "p": 112},
       {"t": "Superman: Up in the Sky", "lead": "", "n": "Uplifting, episodic space odyssey showing why Superman will cross the entire galaxy just to save one kidnapped child.", "ev": false, "tier": "recommended", "tag": "After Era 1"},
       {"t": "Strange Adventures", "lead": "", "n": "Tense, dual-timeline sci-fi thriller interrogating the dark moral cost of a space hero's greatest victory.", "ev": false, "tier": "deep-cut", "tag": "After Era 1 or 5"},
+      {"t": "Wonder Woman: Historia", "lead": "", "n": "Jaw-droppingly illustrated mythic tragedy revealing the secret history of the Amazons before Diana was born.", "ev": false, "tier": "deep-cut"},
 
       {"divider": "TRUE ELSEWORLDS — ALTERNATE TIMELINES & REIMAGINED ORIGINS"},
       {"t": "Superman: Red Son", "lead": "", "n": "Brilliant Cold War \"What If?\" imagining how history bends when Kal-El's rocket lands in 1930s Ukraine instead of Kansas.", "ev": false, "tier": "recommended", "tag": "After Era 1"},
