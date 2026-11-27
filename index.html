@@ -296,6 +296,11 @@ const el = id => document.getElementById(id);
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>';
 
+function syncToggleLabel() {
+  const anyOpen = DATA.some(e => !closed.has(e.id));
+  el('toggleAll').textContent = anyOpen ? 'Collapse all' : 'Expand all';
+}
+
 function build() {
   el('erabar').innerHTML = DATA.map(e => `<button class="erabtn" data-e="${e.id}">${e.emoji} ${e.kind === 'sa' ? 'Standalone' : 'Era ' + e.title.match(/ERA (\d+)/)[1]}<i></i></button>`).join('');
   el('main').innerHTML = DATA.map(e => `
